@@ -80,7 +80,7 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.HasOne(d => d.FamilyGroup)
                   .WithMany(fg => fg.Dependents)
                   .HasForeignKey(d => d.FamilyGroupId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.NoAction);
         });
 
         // === Vaccine Configurations ===
@@ -283,19 +283,19 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.HasOne(vr => vr.User)
                   .WithMany(u => u.VaccineRecords)
                   .HasForeignKey(vr => vr.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.NoAction);
 
             // === Relationship with Dependent ===
             entity.HasOne(vr => vr.Dependent)
                   .WithMany(d => d.VaccineRecords)
                   .HasForeignKey(vr => vr.DependentId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.NoAction);
 
             // === Relationship with Vaccine ===
             entity.HasOne(vr => vr.Vaccine)
                   .WithMany(d => d.VaccineRecords)
                   .HasForeignKey(vr => vr.VaccineId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .OnDelete(DeleteBehavior.NoAction);
         });
     }
 }
