@@ -22,6 +22,21 @@ namespace MyVaccine.WebApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FamilyGroupUser", b =>
+                {
+                    b.Property<int>("FamilyGroupsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FamilyGroupsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("FamilyGroupUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -237,7 +252,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -267,7 +282,7 @@ namespace MyVaccine.WebApi.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("FamilyGroupId")
@@ -304,7 +319,7 @@ namespace MyVaccine.WebApi.Migrations
                     b.Property<int>("AllergyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DependentId")
@@ -320,8 +335,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     b.HasIndex("AllergyId");
 
-                    b.HasIndex("DependentId", "AllergyId")
-                        .IsUnique();
+                    b.HasIndex("DependentId");
 
                     b.ToTable("DependentAllergies");
                 });
@@ -334,7 +348,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -365,11 +379,8 @@ namespace MyVaccine.WebApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("FamilyGroupId")
-                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -388,8 +399,6 @@ namespace MyVaccine.WebApi.Migrations
 
                     b.HasIndex("AspNetUserId");
 
-                    b.HasIndex("FamilyGroupId");
-
                     b.ToTable("Users");
                 });
 
@@ -404,7 +413,7 @@ namespace MyVaccine.WebApi.Migrations
                     b.Property<int>("AllergyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("RegisteredAt")
@@ -420,8 +429,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     b.HasIndex("AllergyId");
 
-                    b.HasIndex("UserId", "AllergyId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserAllergies");
                 });
@@ -434,7 +442,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -464,7 +472,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -496,7 +504,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("RegisteredAt")
@@ -517,8 +525,7 @@ namespace MyVaccine.WebApi.Migrations
 
                     b.HasIndex("VaccineCategoryId");
 
-                    b.HasIndex("VaccineId", "VaccineCategoryId")
-                        .IsUnique();
+                    b.HasIndex("VaccineId");
 
                     b.ToTable("VaccineCategory_Vaccines");
                 });
@@ -543,7 +550,7 @@ namespace MyVaccine.WebApi.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DependentId")
@@ -574,6 +581,21 @@ namespace MyVaccine.WebApi.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("FamilyGroupUser", b =>
+                {
+                    b.HasOne("MyVaccine.WebApi.Models.FamilyGroup", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyGroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyVaccine.WebApi.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -673,15 +695,7 @@ namespace MyVaccine.WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyVaccine.WebApi.Models.FamilyGroup", "FamilyGroup")
-                        .WithMany("Users")
-                        .HasForeignKey("FamilyGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("AspNetUser");
-
-                    b.Navigation("FamilyGroup");
                 });
 
             modelBuilder.Entity("MyVaccine.WebApi.Models.UserAllergy", b =>
@@ -766,8 +780,6 @@ namespace MyVaccine.WebApi.Migrations
             modelBuilder.Entity("MyVaccine.WebApi.Models.FamilyGroup", b =>
                 {
                     b.Navigation("Dependents");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("MyVaccine.WebApi.Models.User", b =>
