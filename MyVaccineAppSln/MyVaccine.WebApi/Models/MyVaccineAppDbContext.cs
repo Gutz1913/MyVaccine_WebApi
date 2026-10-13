@@ -38,20 +38,9 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
                   .IsRequired()
                   .HasMaxLength(100);
 
-            entity.Property(u => u.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(u => u.UpdatedAt)
-                  .IsRequired(false);
-
             entity.HasOne(u => u.AspNetUser)
                   .WithMany()
                   .HasForeignKey(u => u.AspNetUserId);
-
-            entity.HasOne(u => u.FamilyGroup)
-                  .WithMany(fg => fg.Users)
-                  .HasForeignKey(u => u.FamilyGroupId)
-                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // === Dependent Configurations ===
@@ -65,12 +54,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
 
             entity.Property(d => d.BirthDate)
                   .IsRequired();
-
-            entity.Property(d => d.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(d => d.UpdatedAt)
-                  .IsRequired(false);
 
             entity.HasOne(d => d.User)
                   .WithMany(u => u.Dependents)
@@ -95,12 +78,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(v => v.RequiresBooster)
                   .IsRequired();
 
-            entity.Property(v => v.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(v => v.UpdatedAt)
-                  .IsRequired(false);
-
             entity.HasIndex(v => v.Name)
                   .IsUnique();
         });
@@ -118,12 +95,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
                   .IsRequired()
                   .HasMaxLength(255);
 
-            entity.Property(vc => vc.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(vc => vc.UpdatedAt)
-                  .IsRequired(false);
-
             entity.HasIndex(vc => vc.Name)
                   .IsUnique();
         });
@@ -136,12 +107,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(vcv => vcv.RegisteredAt)
                   .IsRequired();
 
-            entity.Property(vcv => vcv.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(vcv => vcv.UpdatedAt)
-                  .IsRequired(false);
-
             // === Relationship with Vaccine ===
             entity.HasOne(vcv => vcv.Vaccine)
                   .WithMany(v => v.VaccineCategory_Vaccines)
@@ -153,9 +118,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
                   .WithMany(vc => vc.VaccineCategory_Vaccines)
                   .HasForeignKey(vcv => vcv.VaccineCategoryId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(vc => new { vc.VaccineId, vc.VaccineCategoryId })
-                  .IsUnique();
         });
 
         // === Allergy Configurations ===
@@ -166,12 +128,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(a => a.Name)
                   .IsRequired()
                   .HasMaxLength(100);
-
-            entity.Property(a => a.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(a => a.UpdatedAt)
-                  .IsRequired(false);
 
             entity.HasIndex(a => a.Name)
                   .IsUnique();
@@ -185,12 +141,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(ua => ua.RegisteredAt)
                   .IsRequired();
 
-            entity.Property(a => a.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(a => a.UpdatedAt)
-                  .IsRequired(false);
-
             // === Relationship with User ===
             entity.HasOne(ua => ua.User)
                   .WithMany(u => u.UserAllergies)
@@ -202,9 +152,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
                   .WithMany(a => a.UserAllergies)
                   .HasForeignKey(ua => ua.AllergyId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(ua => new { ua.UserId, ua.AllergyId })
-                  .IsUnique();
         });
 
         // === DependentAllergy Configurations ===
@@ -215,12 +162,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
 
             entity.Property(da => da.RegisteredAt)
                   .IsRequired();
-
-            entity.Property(da => da.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(da => da.UpdatedAt)
-                  .IsRequired(false);
 
             // === Relationship with Dependent ===
             entity.HasOne(ua => ua.Dependent)
@@ -233,9 +174,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
                   .WithMany(a => a.DependentAllergies)
                   .HasForeignKey(ua => ua.AllergyId)
                   .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasIndex(da => new { da.DependentId, da.AllergyId })
-                  .IsUnique();
         });
 
         // === FamilyGroup Configurations ===
@@ -246,12 +184,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(fg => fg.Name)
                   .IsRequired()
                   .HasMaxLength(100);
-
-            entity.Property(fg => fg.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(fg => fg.UpdatedAt)
-                  .IsRequired(false);
 
             entity.HasIndex(fg => fg.Name)
                   .IsUnique();
@@ -272,12 +204,6 @@ public class MyVaccineAppDbContext : IdentityDbContext<IdentityUser>
             entity.Property(vr => vr.AdministeredLocation)
                   .IsRequired()
                   .HasMaxLength(200);
-
-            entity.Property(vr => vr.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(vr => vr.UpdatedAt)
-                  .IsRequired(false);
 
             // === Relationship with User ===
             entity.HasOne(vr => vr.User)
