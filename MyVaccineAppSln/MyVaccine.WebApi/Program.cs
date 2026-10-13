@@ -1,8 +1,11 @@
+using MyVaccine.WebApi.Configurations;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.SetDatabaseConfiguration();
 
 var app = builder.Build();
 
