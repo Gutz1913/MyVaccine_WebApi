@@ -20,7 +20,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, new()
         if (UpdatedAt != null) entity.GetType().GetProperty("UpdatedAt").SetValue(entity, DateTime.UtcNow);
 
         var CreatedAt = entity.GetType().GetProperty("CreatedAt");
-        if (CreatedAt == null) entity.GetType().GetProperty("CreatedAt").SetValue(entity, DateTime.UtcNow);
+        if (CreatedAt != null) entity.GetType().GetProperty("CreatedAt").SetValue(entity, DateTime.UtcNow);
 
         await _context.AddAsync(entity);
         _context.Entry(entity).State = EntityState.Added;
