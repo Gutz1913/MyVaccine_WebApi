@@ -1,0 +1,80 @@
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MyVaccine.WebApi.DTOs.Request;
+using MyVaccine.WebApi.Services.Contracts;
+
+namespace MyVaccine.WebApi.Controllers;
+
+[Authorize]
+[Route("api/[controller]")]
+[ApiController]
+public class DependentsController : ControllerBase
+{
+    private readonly IDependentService _dependentService;
+    private readonly IValidator<DependentRequestDTO> _validator;
+
+    public DependentsController(IDependentService dependentService, IValidator<DependentRequestDTO> validator)
+    {
+        _dependentService = dependentService;
+        _validator = validator;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var dependents = await _dependentService.GetAll();
+
+        return Ok(dependents);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var dependent = await _dependentService.GetById(id);
+        return Ok(dependent);
+    }
+
+    [HttpGet("get-dependents-by-userid/{userId}")]
+    public async Task<IActionResult> GetDependentsByUserId(int userId)
+    {
+        var dependents = await _dependentService.GetDependentsByUserId(userId);
+        return Ok(dependents);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(DependentRequestDTO dependentDto)
+    {
+        var validationResult = await _validator.ValidateAsync(dependentDto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+        var dependent = await _dependentService.Add(dependentDto);
+
+        return Ok(dependent);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, DependentRequestDTO dependentDto)
+    {
+        var dependent = await _dependentService.Update(id, dependentDto);
+        if (dependent == null)
+        {
+            return NotFound();
+        }
+        return Ok(dependent);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var dependent = await _dependentService.Delete(id);
+        if (dependent == null)
+        {
+            return NotFound();
+        }
+        return Ok(dependent);
+    }
+}
