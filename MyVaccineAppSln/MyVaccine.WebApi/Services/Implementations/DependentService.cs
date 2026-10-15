@@ -128,7 +128,7 @@ public class DependentService : IDependentService
         return response;
     }
 
-    public async Task RegisterAllergyAsync(AllergyDependentRequestDTO request)
+    public async Task RegisterAllergyAsync(DependentAllergyRequestDTO request)
     {
         var dependent = await _dependentRepository
             .FindBy(d => d.Id == request.DependentId)

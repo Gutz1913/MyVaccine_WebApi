@@ -60,7 +60,7 @@ public class DependentsController : ControllerBase
     }
 
     [HttpPost("register-allergies")]
-    public async Task<IActionResult> RegisterAllergy(AllergyDependentRequestDTO request)
+    public async Task<IActionResult> RegisterAllergy(DependentAllergyRequestDTO request)
     {
         try
         {

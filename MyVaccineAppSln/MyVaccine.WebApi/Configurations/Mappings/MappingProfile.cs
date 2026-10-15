@@ -31,7 +31,7 @@ public class MappingProfile : Profile
                     ? src.DependentAllergies.FirstOrDefault().Allergy.Name
                     : string.Empty));
 
-        CreateMap<AllergyDependentRequestDTO, DependentAllergy>();
+        CreateMap<DependentAllergyRequestDTO, DependentAllergy>();
         CreateMap<DependentAllergy, DependentAllergyResponseDTO>()
             .ForMember(
                 dest => dest.AllergyName,
