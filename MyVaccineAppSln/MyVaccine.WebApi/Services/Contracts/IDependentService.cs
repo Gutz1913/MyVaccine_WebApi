@@ -11,4 +11,5 @@ public interface IDependentService
     Task<DependentResponseDTO> Add(DependentRequestDTO request);
     Task<DependentResponseDTO> Update(int id, DependentRequestDTO request);
     Task<DependentResponseDTO> Delete(int id);
+    Task RegisterAllergyAsync(AllergyDependentRequestDTO request);
 }

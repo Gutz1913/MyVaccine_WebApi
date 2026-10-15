@@ -1,4 +1,4 @@
-﻿namespace MyVaccine.WebApi.DTOs.Response;
+namespace MyVaccine.WebApi.DTOs.Response;
 
 public class DependentResponseDTO
 {
@@ -9,6 +9,8 @@ public class DependentResponseDTO
     public string UserFullName { get; set; } = string.Empty;
     public int FamilyGroupId { get; set; }
     public string FamilyGroupName { get; set; } = string.Empty;
+    public int AllergyId { get; set; }
+    public string AllergyName { get; set; } = string.Empty;
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }

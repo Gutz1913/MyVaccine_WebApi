@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyVaccine.WebApi.DTOs.Request;
+using MyVaccine.WebApi.Models;
 using MyVaccine.WebApi.Services.Contracts;
 
 namespace MyVaccine.WebApi.Controllers;
@@ -14,7 +15,9 @@ public class DependentsController : ControllerBase
     private readonly IDependentService _dependentService;
     private readonly IValidator<DependentRequestDTO> _validator;
 
-    public DependentsController(IDependentService dependentService, IValidator<DependentRequestDTO> validator)
+    public DependentsController(
+        IDependentService dependentService,
+        IValidator<DependentRequestDTO> validator)
     {
         _dependentService = dependentService;
         _validator = validator;
@@ -54,6 +57,21 @@ public class DependentsController : ControllerBase
         var dependent = await _dependentService.Add(dependentDto);
 
         return Ok(dependent);
+    }
+
+    [HttpPost("register-allergies")]
+    public async Task<IActionResult> RegisterAllergy(AllergyDependentRequestDTO request)
+    {
+        try
+        {
+            await _dependentService.RegisterAllergyAsync(request);
+            return Ok(new { message = "Allergia registrada exitosamente" });
+        }
+        catch (Exception ex)
+        {
+
+            return NotFound(new { message = ex.Message });
+        }
     }
 
     [HttpPut("{id}")]

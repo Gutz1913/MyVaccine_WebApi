@@ -11,10 +11,15 @@ namespace MyVaccine.WebApi.Services.Implementations;
 public class DependentService : IDependentService
 {
     private readonly IBaseRepository<Dependent> _dependentRepository;
+    private readonly IBaseRepository<Allergy> _allergyRepository;
+    private readonly IBaseRepository<DependentAllergy> _dependentAllergyRepository;
     private readonly IMapper _mapper;
-    public DependentService(IBaseRepository<Dependent> dependentRepository, IMapper mapper)
+
+    public DependentService(IBaseRepository<Dependent> dependentRepository, IBaseRepository<Allergy> allergyRepository, IBaseRepository<DependentAllergy> dependentAllergyRepository, IMapper mapper)
     {
         _dependentRepository = dependentRepository;
+        _allergyRepository = allergyRepository;
+        _dependentAllergyRepository = dependentAllergyRepository;
         _mapper = mapper;
     }
 
@@ -24,6 +29,8 @@ public class DependentService : IDependentService
             .GetAll()
             .Include(d => d.User)
             .Include(d => d.FamilyGroup)
+            .Include(d => d.DependentAllergies)
+            .ThenInclude(da => da.Allergy)
             .AsNoTracking()
             .ToListAsync();
 
@@ -38,6 +45,8 @@ public class DependentService : IDependentService
             .FindByAsNoTracking(d => d.Id == id)
             .Include(d => d.User)
             .Include(d => d.FamilyGroup)
+            .Include(d => d.DependentAllergies)
+            .ThenInclude(da => da.Allergy)
             .FirstOrDefaultAsync();
 
         var response = _mapper.Map<DependentResponseDTO>(dependent);
@@ -51,6 +60,8 @@ public class DependentService : IDependentService
             .FindByAsNoTracking(d => d.UserId == userId)
             .Include(d => d.User)
             .Include(d => d.FamilyGroup)
+            .Include(d => d.DependentAllergies)
+            .ThenInclude(da => da.Allergy)
             .ToListAsync();
 
         var response = _mapper.Map<IEnumerable<DependentResponseDTO>>(dependents);
@@ -86,6 +97,8 @@ public class DependentService : IDependentService
             .FindBy(d => d.Id == id)
             .Include(d => d.User)
             .Include(d => d.FamilyGroup)
+            .Include(d => d.DependentAllergies)
+            .ThenInclude(da => da.Allergy)
             .FirstOrDefaultAsync();
 
         dependent.Name = request.Name;
@@ -105,6 +118,8 @@ public class DependentService : IDependentService
             .FindBy(d => d.Id == id)
             .Include(d => d.User)
             .Include(d => d.FamilyGroup)
+            .Include(d => d.DependentAllergies)
+            .ThenInclude(da => da.Allergy)
             .FirstOrDefaultAsync();
 
         await _dependentRepository.Delete(dependent);
@@ -112,4 +127,35 @@ public class DependentService : IDependentService
 
         return response;
     }
+
+    public async Task RegisterAllergyAsync(AllergyDependentRequestDTO request)
+    {
+        var dependent = await _dependentRepository
+            .FindBy(d => d.Id == request.DependentId)
+            .Include(d => d.User)
+            .Include(d => d.FamilyGroup)
+            .FirstOrDefaultAsync();
+
+        if (dependent == null)
+            throw new KeyNotFoundException($"Dependiente con ID: {request.DependentId} no encontrado.");
+
+        var allergy = await _allergyRepository
+            .FindBy(a => a.Id == request.AllergyId)
+            .FirstOrDefaultAsync();
+
+        if (allergy == null)
+            throw new KeyNotFoundException($"Alergia con ID: {request.AllergyId} no encontrada.");
+
+        var dependentAllergy = new DependentAllergy()
+        {
+            DependentId = request.DependentId,
+            AllergyId = request.AllergyId,
+            RegisteredAt = DateTime.UtcNow
+        };
+
+        await _dependentAllergyRepository.Add(dependentAllergy);
+        _mapper.Map<DependentAllergyResponseDTO>(dependentAllergy);
+    }
 }
+
+
