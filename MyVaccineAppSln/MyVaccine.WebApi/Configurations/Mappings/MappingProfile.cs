@@ -13,19 +13,23 @@ public class MappingProfile : Profile
         CreateMap<Dependent, DependentResponseDTO>()
             .ForMember(
                 dest => dest.UserFullName,
-                opt => opt.MapFrom(src => src.User.FirstName + " " + src.User.LastName))
+                opt => opt.MapFrom(
+                    src => src.User.FirstName + " " + src.User.LastName))
             .ForMember(
                 dest => dest.FamilyGroupName,
-                opt => opt.MapFrom(src => src.FamilyGroup.Name))
+                opt => opt.MapFrom(
+                    src => src.FamilyGroup.Name))
             .ForMember(
                 dest => dest.AllergyId,
-                opt => opt.MapFrom(src => src.DependentAllergies
+                opt => opt.MapFrom(
+                    src => src.DependentAllergies
                     .FirstOrDefault() != null
                     ? src.DependentAllergies.FirstOrDefault().AllergyId
                     : 0))
             .ForMember(
                 dest => dest.AllergyName,
-                opt => opt.MapFrom(src => src.DependentAllergies
+                opt => opt.MapFrom(
+                    src => src.DependentAllergies
                     .FirstOrDefault() != null
                     && src.DependentAllergies.FirstOrDefault().Allergy != null
                     ? src.DependentAllergies.FirstOrDefault().Allergy.Name
@@ -35,10 +39,12 @@ public class MappingProfile : Profile
         CreateMap<DependentAllergy, DependentAllergyResponseDTO>()
             .ForMember(
                 dest => dest.AllergyId,
-                opt => opt.MapFrom(src => src.Allergy.Id))
+                opt => opt.MapFrom(
+                    src => src.Allergy.Id))
             .ForMember(
                 dest => dest.AllergyName,
-                opt => opt.MapFrom(src => src.Allergy.Name));
+                opt => opt.MapFrom(
+                    src => src.Allergy.Name));
 
 
         CreateMap<FamilyGroupRequestDTO, FamilyGroup>();
@@ -49,24 +55,33 @@ public class MappingProfile : Profile
 
         CreateMap<VaccineRequestDTO, Vaccine>();
         CreateMap<Vaccine, VaccineResponseDTO>()
-            .ForMember(dest => dest.VaccineCategoryId,
-                opt => opt.MapFrom(src => src.VaccineCategory_Vaccines
+            .ForMember(
+                dest => dest.VaccineCategoryId,
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory_Vaccines
                     .FirstOrDefault() != null
-                    ? src.VaccineCategory_Vaccines.FirstOrDefault().VaccineCategoryId
+                    ? src.VaccineCategory_Vaccines.FirstOrDefault()
+                    .VaccineCategoryId
                     : 0))
             .ForMember(
                 dest => dest.VaccineCategoryName,
-                opt => opt.MapFrom(src => src.VaccineCategory_Vaccines
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory_Vaccines
                     .FirstOrDefault() != null
-                    && src.VaccineCategory_Vaccines.FirstOrDefault().VaccineCategory != null
-                    ? src.VaccineCategory_Vaccines.FirstOrDefault().VaccineCategory.Name
+                    && src.VaccineCategory_Vaccines.FirstOrDefault()
+                    .VaccineCategory != null
+                    ? src.VaccineCategory_Vaccines.FirstOrDefault()
+                    .VaccineCategory.Name
                     : string.Empty))
             .ForMember(
                 dest => dest.VaccineCategoryDescription,
-                opt => opt.MapFrom(src => src.VaccineCategory_Vaccines
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory_Vaccines
                     .FirstOrDefault() != null
-                    && src.VaccineCategory_Vaccines.FirstOrDefault().VaccineCategory.Description != null
-                    ? src.VaccineCategory_Vaccines.FirstOrDefault().VaccineCategory.Description
+                    && src.VaccineCategory_Vaccines.FirstOrDefault()
+                    .VaccineCategory.Description != null
+                    ? src.VaccineCategory_Vaccines.FirstOrDefault()
+                    .VaccineCategory.Description
                     : string.Empty));
 
         CreateMap<VaccineCategoryRequestDTO, VaccineCategory>();
@@ -77,22 +92,43 @@ public class MappingProfile : Profile
         CreateMap<VaccineCategory_Vaccine, VaccineCategory_VaccineResponseDTO>()
             .ForMember(
                 dest => dest.VaccineCategoryId,
-                opt => opt.MapFrom(src => src.VaccineCategory.Id))
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Id))
             .ForMember(
                 dest => dest.VaccineCategoryName,
-                opt => opt.MapFrom(src => src.VaccineCategory.Name))
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Name))
             .ForMember(
                 dest => dest.VaccineCategoryDescription,
-                opt => opt.MapFrom(src => src.VaccineCategory.Description));
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Description));
         CreateMap<VaccineCategory_Vaccine, VaccineCategoryResponseDTO>()
             .ForMember(
                 dest => dest.Id, 
-                opt => opt.MapFrom(src => src.VaccineCategory.Id))
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Id))
             .ForMember(
                 dest => dest.Name, 
-                opt => opt.MapFrom(src => src.VaccineCategory.Name))
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Name))
             .ForMember(
                 dest => dest.Description, 
-                opt => opt.MapFrom(src => src.VaccineCategory.Description));
+                opt => opt.MapFrom(
+                    src => src.VaccineCategory.Description));
+
+        CreateMap<VaccineRecordRequestDTO, VaccineRecord>();
+        CreateMap<VaccineRecord, VaccineRecordResponseDTO>()
+            .ForMember(
+                dest => dest.UserFullName,
+                opt => opt.MapFrom(
+                    src => src.User.FirstName + " " + src.User.LastName))
+            .ForMember(
+                dest => dest.DependentName,
+                opt => opt.MapFrom(
+                    src => src.Dependent.Name))
+            .ForMember(
+                dest => dest.VaccineName, 
+                opt => opt.MapFrom(
+                    src => src.Vaccine.Name));
     }
 }
