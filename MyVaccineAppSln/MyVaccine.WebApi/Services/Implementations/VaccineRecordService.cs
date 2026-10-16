@@ -104,6 +104,13 @@ public class VaccineRecordService : IVaccineRecordService
         record.AdministeredBy = request.AdministeredBy;
 
         await _vaccineRecordRepository.Update(record);
+        var recordDetailed = await _vaccineRecordRepository
+            .FindBy(vr => vr.Id == record.Id)
+            .Include(vr => vr.User)
+            .Include(vr => vr.Dependent)
+            .Include(vr => vr.Vaccine)
+            .FirstOrDefaultAsync();
+
         var response = _mapper.Map<VaccineRecordResponseDTO>(record);
 
         return response;
