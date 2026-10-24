@@ -7,7 +7,7 @@ public interface IVaccineCategoryService
 {
     Task<IEnumerable<VaccineCategoryResponseDTO>> GetAll();
     Task<VaccineCategoryResponseDTO> GetById(int id);
-    Task<IEnumerable<VaccineCategoryResponseDTO>> GetVaccinesByCategoryId(int vaccineCategoryId);
+    Task<IEnumerable<VaccineCategory_VaccineResponseDTO>> GetVaccinesByCategoryId(int vaccineCategoryId);
     Task<VaccineCategoryResponseDTO> Add(VaccineCategoryRequestDTO request);
     Task<VaccineCategoryResponseDTO> Update(int id, VaccineCategoryRequestDTO request);
     Task<VaccineCategoryResponseDTO> Delete(int id);

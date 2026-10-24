@@ -91,6 +91,14 @@ public class MappingProfile : Profile
         CreateMap<VaccineCategory_VaccineRequestDTO, VaccineCategory_Vaccine>();
         CreateMap<VaccineCategory_Vaccine, VaccineCategory_VaccineResponseDTO>()
             .ForMember(
+                dest => dest.VaccineId, 
+                opt => opt.MapFrom(
+                    src => src.Vaccine.Id))
+            .ForMember(
+                dest => dest.VaccineName, 
+                opt => opt.MapFrom(
+                    src => src.Vaccine.Name))
+            .ForMember(
                 dest => dest.VaccineCategoryId,
                 opt => opt.MapFrom(
                     src => src.VaccineCategory.Id))

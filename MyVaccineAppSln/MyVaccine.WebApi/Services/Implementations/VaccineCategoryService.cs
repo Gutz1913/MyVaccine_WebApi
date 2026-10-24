@@ -49,15 +49,15 @@ public class VaccineCategoryService : IVaccineCategoryService
         return response;
     }
 
-    public async Task<IEnumerable<VaccineCategoryResponseDTO>> GetVaccinesByCategoryId(int vaccineCategoryId)
+    public async Task<IEnumerable<VaccineCategory_VaccineResponseDTO>> GetVaccinesByCategoryId(int vaccineCategoryId)
     {
-        var vaccines = await _vaccineCategoryRepository
-            .FindByAsNoTracking(vc => vc.Id == vaccineCategoryId)
-            .Include(vc => vc.VaccineCategory_Vaccines)
-            .ThenInclude(vc => vc.Vaccine)
+        var vaccinesByCategory = await _vaccineCategory_VaccineRepository
+            .FindByAsNoTracking(vc => vc.VaccineCategoryId == vaccineCategoryId)
+            .Include(vc => vc.Vaccine)
+            .Include(vc => vc.VaccineCategory)
             .ToListAsync();
 
-        var response = _mapper.Map<IEnumerable<VaccineCategoryResponseDTO>>(vaccines);
+        var response = _mapper.Map<IEnumerable<VaccineCategory_VaccineResponseDTO>>(vaccinesByCategory);
 
         return response;
     }

@@ -107,6 +107,12 @@ public class DependentService : IDependentService
         dependent.FamilyGroupId = request.FamilyGroupId;
 
         await _dependentRepository.Update(dependent);
+        var dependentWithUserAndFamilyGroup = await _dependentRepository
+            .FindBy(d => d.Id == dependent.Id)
+            .Include(d => d.User)
+            .Include(d => d.FamilyGroup)
+            .FirstOrDefaultAsync();
+
         var response = _mapper.Map<DependentResponseDTO>(dependent);
 
         return response;
