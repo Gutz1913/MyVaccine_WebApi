@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 var configuration = builder.Configuration;
 
 builder.Services.SetDatabaseConfiguration(configuration);
-builder.Services.SetMyVaccineAuthConfiguration();
+builder.Services.SetMyVaccineAuthConfiguration(configuration);
 builder.Services.SetDependencyInjection();
 builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 

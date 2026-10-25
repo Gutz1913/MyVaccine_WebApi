@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyVaccine.WebApi.DTOs.Request;
 using MyVaccine.WebApi.DTOs.Response;
-using MyVaccine.WebApi.Literals;
 using MyVaccine.WebApi.Models;
 using MyVaccine.WebApi.Repositories.Contracts;
 using MyVaccine.WebApi.Services.Contracts;
@@ -16,11 +15,13 @@ namespace MyVaccine.WebApi.Services.Implementations;
 public class UserService : IUserService
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly IConfiguration _configuration;
     private readonly IUserRepository _userRepository;
-    public UserService(UserManager<IdentityUser> userManager, IUserRepository userRepository)
+    public UserService(UserManager<IdentityUser> userManager, IUserRepository userRepository, IConfiguration configuration)
     {
         _userManager = userManager;
         _userRepository = userRepository;
+        _configuration = configuration;
     }
 
     public async Task<AuthResponseDTO> AddUserAsync(RegisterRequestDTO request)
@@ -59,7 +60,7 @@ public class UserService : IUserService
                 new Claim(ClaimTypes.Name, user.UserName)
             };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(MyVaccineLiterals.JWT_KEY)));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
@@ -103,7 +104,7 @@ public class UserService : IUserService
                     new Claim(ClaimTypes.Name, user.UserName)
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(MyVaccineLiterals.JWT_KEY)));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(

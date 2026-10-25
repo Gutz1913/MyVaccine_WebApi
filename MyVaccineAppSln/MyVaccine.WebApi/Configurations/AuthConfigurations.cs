@@ -9,7 +9,7 @@ namespace MyVaccine.WebApi.Configurations;
 
 public static class AuthConfigurations
 {
-    public static IServiceCollection SetMyVaccineAuthConfiguration(this IServiceCollection services)
+    public static IServiceCollection SetMyVaccineAuthConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
@@ -41,7 +41,8 @@ public static class AuthConfigurations
                 ValidateIssuerSigningKey = true,
                 //ValidIssuer = "tu_issuer",
                 //ValidAudience = "tu_audience",
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(MyVaccineLiterals.JWT_KEY))),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"])),
+                //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable(MyVaccineLiterals.JWT_KEY))),
                 //ClockSkew = TimeSpan.Zero // Evita un desfase de tiempo al validar el token (opcional)
             };
         });
